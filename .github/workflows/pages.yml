@@ -2,30 +2,49 @@ name: Github Pages
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v5
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
     - name: Install dependencies
       run: python3 -m pip install mkdocs-bootswatch 
-    - name: Build docs
+    - name: Build main page docs
       run: |
-        GLOBIGNORE=ID_software_architecture_files:README.md:.git:.github
-        rm -rf *
         cd ID_software_architecture_files
         mkdocs build
-        mv site/* ..
-        rmdir site
-    - name: Deploy
-      run: |
-        git config --local user.name 'github-actions[bot]'
-        git config --local user.email 'github-actions[bot]@users.noreply.github.com'
-        git add .
-        git commit -am "Update site"
-        git push origin master
+        mv site ../_site
+    - name: Build domain page docs
+      uses: actions/jekyll-build-pages@v1
+      with:
+        source: ./domain
+        destination: ./_site/domain
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v4
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
