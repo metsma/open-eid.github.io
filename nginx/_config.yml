@@ -4,4 +4,4 @@ description: Technical documentation for configuring two-way SSL using Estonian 
 google_analytics:
 layout: minimal
 nav_enabled: false
-baseurl: "/nginx"
+baseurl: "/open-eid.github.io/nginx"
