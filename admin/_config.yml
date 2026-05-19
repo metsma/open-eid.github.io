@@ -4,4 +4,4 @@ description: Technical documentation for IT administrators on installing and man
 google_analytics:
 layout: minimal
 nav_enabled: false
-baseurl: "/admin"
+baseurl: "/open-eid.github.io/admin"

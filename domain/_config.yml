@@ -4,4 +4,4 @@ description: Technical documentation for implementing Estonian eID card authenti
 google_analytics:
 layout: minimal
 nav_enabled: false
-baseurl: "/domain"
+baseurl: "/open-eid.github.io/domain"
